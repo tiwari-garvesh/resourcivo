@@ -7,11 +7,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "faculty")
+@Table(name = "faculty", indexes = {
+		@Index(name = "idx_faculty_level", columnList = "level"),
+		@Index(name = "idx_faculty_subject", columnList = "subject"),
+		@Index(name = "idx_faculty_experience", columnList = "yearOfExperience")
+})
 public class Faculty {
 
 	@Id
@@ -78,11 +83,11 @@ public class Faculty {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public Address getCuttentAddress() {
+	public Address getCurrentAddress() {
 		return currentAddress;
 	}
 
-	public void setCuttentAddress(Address currentAddress) {
+	public void setCurrentAddress(Address currentAddress) {
 		this.currentAddress = currentAddress;
 	}
 
@@ -132,6 +137,14 @@ public class Faculty {
 
 	public void setBio(String bio) {
 		this.bio = bio;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Contact getContact() {

@@ -1,17 +1,14 @@
 package com.project.resourcivo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "emergency_contact")
 public class EmergencyContact {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 
 	private String name;
 
@@ -23,6 +20,10 @@ public class EmergencyContact {
 
 	@OneToOne
 	private Address address;
+
+	public Long getId() {
+		return id;
+	}
 
 	public String getName() {
 		return name;
@@ -65,13 +66,10 @@ public class EmergencyContact {
 	}
 
 	public EmergencyContact() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public EmergencyContact(String name, Long primaryContactNumber, Long alternateContactNumber, String email,
 			Address address) {
-		super();
 		this.name = name;
 		this.primaryContactNumber = primaryContactNumber;
 		this.alternateContactNumber = alternateContactNumber;
@@ -81,9 +79,8 @@ public class EmergencyContact {
 
 	@Override
 	public String toString() {
-		return "EmergencyContact [name=" + name + ", primaryContactNumber=" + primaryContactNumber
+		return "EmergencyContact [id=" + id + ", name=" + name + ", primaryContactNumber=" + primaryContactNumber
 				+ ", alternateContactNumber=" + alternateContactNumber + ", email=" + email + ", address=" + address
 				+ "]";
 	}
-
 }

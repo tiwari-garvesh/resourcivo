@@ -7,11 +7,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "student")
+@Table(name = "student", indexes = {
+		@Index(name = "idx_student_course", columnList = "course"),
+		@Index(name = "idx_student_date_joining", columnList = "dateOfJoining")
+})
 public class Student {
 
 	@Id

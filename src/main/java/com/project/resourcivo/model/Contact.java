@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Contact {
@@ -21,8 +20,13 @@ public class Contact {
 
 	private String alternateEmail;
 
-	@OneToOne
-	private EmergencyContact emergencyContact;
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public Long getPrimaryNumber() {
 		return primaryNumber;
@@ -56,33 +60,23 @@ public class Contact {
 		this.alternateEmail = alternateEmail;
 	}
 
-	public EmergencyContact getEmergencyContact() {
-		return emergencyContact;
-	}
-
-	public void setEmergencyContact(EmergencyContact emergencyContact) {
-		this.emergencyContact = emergencyContact;
-	}
-
 	public Contact() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Contact(Long primaryNumber, Long alternateNumber, String primaryEmail, String alternateEmail,
-			EmergencyContact emergencyContact) {
+	public Contact(Long primaryNumber, Long alternateNumber, String primaryEmail, String alternateEmail) {
 		super();
 		this.primaryNumber = primaryNumber;
 		this.alternateNumber = alternateNumber;
 		this.primaryEmail = primaryEmail;
 		this.alternateEmail = alternateEmail;
-		this.emergencyContact = emergencyContact;
 	}
 
 	@Override
 	public String toString() {
 		return "Contact [primaryNumber=" + primaryNumber + ", alternateNumber=" + alternateNumber + ", primaryEmail="
-				+ primaryEmail + ", alternateEmail=" + alternateEmail + ", emergencyContact=" + emergencyContact + "]";
+				+ primaryEmail + ", alternateEmail=" + alternateEmail + "]";
 	}
 
 }
