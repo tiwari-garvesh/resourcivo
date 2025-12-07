@@ -1,7 +1,7 @@
 package com.project.resourcivo.service;
 
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Collectors;
@@ -37,8 +37,7 @@ public class SubjectService implements ISubjectService {
     @CacheEvict(value = "subjects", allEntries = true)
     public SubjectResponseDTO updateFromDto(Long id, SubjectCreateDTO dto) {
         return repo.findById(id).map(existing -> {
-            Subject updated = SubjectMapper.toEntity(dto);
-            // merge or replace existing fields as needed
+            SubjectMapper.updateEntity(dto, existing);
             var s = repo.save(existing);
             return SubjectMapper.toResponse(s);
         }).orElse(null);
@@ -56,8 +55,27 @@ public class SubjectService implements ISubjectService {
     }
 
     @Override
+    public SubjectResponseDTO getById(Long id) {
+        return repo.findById(id).map(SubjectMapper::toResponse).orElse(null);
+    }
+
+    @Override
     public List<SubjectResponseDTO> search(SubjectFilterDTO filter) {
         return repo.findAll(SubjectSpecification.build(filter)).stream().map(SubjectMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "subjects", allEntries = true)
+    public void delete(Long id) {
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+        }
+    }
+
+    @Override
+    public List<SubjectResponseDTO> getAll() {
+        return repo.findAll().stream().map(SubjectMapper::toResponse).collect(Collectors.toList());
     }
 }

@@ -8,7 +8,16 @@ import com.project.resourcivo.criteria.ClassroomFilterDTO;
 
 public interface IClassroomService {
     ClassroomResponseDTO createFromDto(ClassroomCreateDTO dto);
+
     ClassroomResponseDTO updateFromDto(Long id, ClassroomCreateDTO dto);
+
     ClassroomResponseDTO partialUpdateFromDto(Long id, ClassroomUpdateDTO dto);
+
+    ClassroomResponseDTO getById(Long id);
+
     java.util.List<ClassroomResponseDTO> search(ClassroomFilterDTO filter);
+
+    List<ClassroomResponseDTO> getAll();
+
+    void delete(Long id);
 }

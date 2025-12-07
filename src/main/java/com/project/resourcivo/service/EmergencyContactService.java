@@ -52,7 +52,21 @@ public class EmergencyContactService implements IEmergencyContactService {
     }
 
     @Override
+    public EmergencyContactResponseDTO getById(Long id) {
+        return repo.findById(id).map(EmergencyContactMapper::toResponse).orElse(null);
+    }
+
+    @Override
     public List<EmergencyContactResponseDTO> search(EmergencyContactFilterDTO filter) {
-        return repo.findAll(EmergencyContactSpecification.build(filter)).stream().map(EmergencyContactMapper::toResponse).collect(Collectors.toList());
+        return repo.findAll(EmergencyContactSpecification.build(filter)).stream()
+                .map(EmergencyContactMapper::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+        }
     }
 }

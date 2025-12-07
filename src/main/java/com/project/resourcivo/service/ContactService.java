@@ -52,7 +52,13 @@ public class ContactService implements IContactService {
     }
 
     @Override
+    public ContactResponseDTO getById(Long id) {
+        return repo.findById(id).map(ContactMapper::toResponse).orElse(null);
+    }
+
+    @Override
     public List<ContactResponseDTO> search(ContactFilterDTO filter) {
-        return repo.findAll(ContactSpecification.build(filter)).stream().map(ContactMapper::toResponse).collect(Collectors.toList());
+        return repo.findAll(ContactSpecification.build(filter)).stream().map(ContactMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

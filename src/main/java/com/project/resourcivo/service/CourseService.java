@@ -1,7 +1,7 @@
 package com.project.resourcivo.service;
 
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Collectors;
@@ -37,8 +37,7 @@ public class CourseService implements ICourseService {
     @CacheEvict(value = "courses", allEntries = true)
     public CourseResponseDTO updateFromDto(Long id, CourseCreateDTO dto) {
         return repo.findById(id).map(existing -> {
-            Course updated = CourseMapper.toEntity(dto);
-            // merge or replace existing fields as needed
+            CourseMapper.updateEntity(dto, existing);
             var s = repo.save(existing);
             return CourseMapper.toResponse(s);
         }).orElse(null);
@@ -56,8 +55,22 @@ public class CourseService implements ICourseService {
     }
 
     @Override
+    public CourseResponseDTO getById(Long id) {
+        return repo.findById(id).map(CourseMapper::toResponse).orElse(null);
+    }
+
+    @Override
     public List<CourseResponseDTO> search(CourseFilterDTO filter) {
         return repo.findAll(CourseSpecification.build(filter)).stream().map(CourseMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "courses", allEntries = true)
+    public void delete(Long id) {
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+        }
     }
 }

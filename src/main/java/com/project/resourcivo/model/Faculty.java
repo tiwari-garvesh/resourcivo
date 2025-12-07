@@ -157,7 +157,7 @@ public class Faculty {
 
 	public Faculty() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Faculty(String firstName, String lastName, LocalDate dateOfBirth, Address currentAddress,

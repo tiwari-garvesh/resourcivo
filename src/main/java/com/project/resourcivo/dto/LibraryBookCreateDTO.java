@@ -12,6 +12,7 @@ public class LibraryBookCreateDTO {
     private String reviews;
     private String about;
     private Boolean isIssued;
+    private Long libraryId;
 
     public String getName() {
         return name;
@@ -83,5 +84,13 @@ public class LibraryBookCreateDTO {
 
     public void setIsIssued(Boolean isIssued) {
         this.isIssued = isIssued;
+    }
+
+    public Long getLibraryId() {
+        return libraryId;
+    }
+
+    public void setLibraryId(Long libraryId) {
+        this.libraryId = libraryId;
     }
 }

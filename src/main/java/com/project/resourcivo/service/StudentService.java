@@ -1,7 +1,7 @@
 package com.project.resourcivo.service;
 
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Collectors;
@@ -14,6 +14,7 @@ import com.project.resourcivo.dto.StudentUpdateDTO;
 import com.project.resourcivo.dto.StudentResponseDTO;
 import com.project.resourcivo.criteria.StudentFilterDTO;
 import com.project.resourcivo.specification.StudentSpecification;
+import com.project.resourcivo.exception.ResourceNotFoundException;
 
 @Service
 public class StudentService implements IStudentService {
@@ -37,8 +38,7 @@ public class StudentService implements IStudentService {
     @CacheEvict(value = "students", allEntries = true)
     public StudentResponseDTO updateFromDto(Long id, StudentCreateDTO dto) {
         return repo.findById(id).map(existing -> {
-            Student updated = StudentMapper.toEntity(dto);
-            // merge or replace existing fields as needed
+            StudentMapper.updateEntity(dto, existing);
             var s = repo.save(existing);
             return StudentMapper.toResponse(s);
         }).orElse(null);
@@ -59,5 +59,45 @@ public class StudentService implements IStudentService {
     public List<StudentResponseDTO> search(StudentFilterDTO filter) {
         return repo.findAll(StudentSpecification.build(filter)).stream().map(StudentMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public StudentResponseDTO addEmergencyContact(Long studentId,
+            com.project.resourcivo.dto.EmergencyContactCreateDTO dto) {
+        Student student = repo.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
+
+        if (student.getEmergencyContacts() != null && student.getEmergencyContacts().size() >= 2) {
+            throw new IllegalStateException("Maximum of 2 emergency contacts allowed");
+        }
+
+        com.project.resourcivo.model.EmergencyContact contact = com.project.resourcivo.mapper.EmergencyContactMapper
+                .toEntity(dto);
+
+        if (student.getEmergencyContacts() == null) {
+            student.setEmergencyContacts(new java.util.ArrayList<>());
+        }
+
+        student.getEmergencyContacts().add(contact);
+        return StudentMapper.toResponse(repo.save(student));
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+        }
+    }
+
+    @Override
+    public List<StudentResponseDTO> getAll() {
+        return repo.findAll().stream().map(StudentMapper::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudentResponseDTO> findByCourse(String course) {
+        return repo.findByCourse(course).stream().map(StudentMapper::toResponse).collect(Collectors.toList());
     }
 }

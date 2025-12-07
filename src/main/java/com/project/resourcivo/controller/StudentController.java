@@ -23,9 +23,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 public class StudentController {
 
     private final IStudentService service;
+    private final com.project.resourcivo.service.BookIssueService issueService;
 
-    public StudentController(IStudentService service) {
+    public StudentController(IStudentService service, com.project.resourcivo.service.BookIssueService issueService) {
         this.service = service;
+        this.issueService = issueService;
     }
 
     @PostMapping
@@ -73,5 +75,54 @@ public class StudentController {
     @ApiResponse(responseCode = "200", description = "Search results returned successfully")
     public ResponseEntity<List<StudentResponseDTO>> search(@RequestBody StudentFilterDTO filter) {
         return ResponseEntity.ok(service.search(filter));
+    }
+
+    @PostMapping("/issue-request")
+    @Operation(summary = "Request book issue", description = "Student requests a book to be issued")
+    public ResponseEntity<?> requestIssue(@Valid @RequestBody com.project.resourcivo.dto.BookIssueRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(issueService.requestIssue(dto));
+    }
+
+    @GetMapping("/{id}/issued-books")
+    @Operation(summary = "Get issued books", description = "Get list of books issued to the student (including pending return)")
+    public ResponseEntity<?> getIssuedBooks(@PathVariable Long id) {
+        return ResponseEntity.ok(issueService.getEffectiveIssuedBooks(id));
+    }
+
+    @GetMapping("/{id}/issue-history")
+    @Operation(summary = "Get issue history", description = "Get complete history of books issued to the student")
+    public ResponseEntity<?> getIssueHistory(@PathVariable Long id) {
+        return ResponseEntity.ok(issueService.getIssueHistory(id));
+    }
+
+    @PutMapping("/issue-request/{id}/return")
+    @Operation(summary = "Request book return", description = "Student requests to return an issued book")
+    public ResponseEntity<?> requestReturn(@PathVariable Long id) {
+        return ResponseEntity.ok(issueService.requestReturn(id));
+    }
+
+    @PostMapping("/{id}/emergency-contact")
+    @Operation(summary = "Add emergency contact", description = "Add an emergency contact for the student (Max 2)")
+    public ResponseEntity<?> addEmergencyContact(@PathVariable Long id,
+            @Valid @RequestBody com.project.resourcivo.dto.EmergencyContactCreateDTO dto) {
+        return ResponseEntity.ok(service.addEmergencyContact(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete student", description = "Deletes a student by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Student deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Student not found")
+    })
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    @Operation(summary = "Get all students", description = "Retrieves a list of all students")
+    @ApiResponse(responseCode = "200", description = "List of students retrieved successfully")
+    public ResponseEntity<List<StudentResponseDTO>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 }

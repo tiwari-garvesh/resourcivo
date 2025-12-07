@@ -1,48 +1,70 @@
 package com.project.resourcivo.mapper;
 
-import com.project.resourcivo.model.LabEquipment;
 import com.project.resourcivo.dto.LabEquipmentCreateDTO;
-import com.project.resourcivo.dto.LabEquipmentUpdateDTO;
 import com.project.resourcivo.dto.LabEquipmentResponseDTO;
+import com.project.resourcivo.model.LabEquipment;
+import com.project.resourcivo.model.EquipmentStatus;
 
-public final class LabEquipmentMapper {
-
-    private LabEquipmentMapper() {}
+public class LabEquipmentMapper {
 
     public static LabEquipment toEntity(LabEquipmentCreateDTO dto) {
-        if (dto == null) return null;
+        if (dto == null)
+            return null;
         LabEquipment e = new LabEquipment();
-        if (dto.getEquipmentName() != null) e.setEquipmentName(dto.getEquipmentName());
-        if (dto.getCategory() != null) e.setCategory(dto.getCategory());
-        if (dto.getPurchaseDate() != null) e.setPurchaseDate(dto.getPurchaseDate());
-        if (dto.getQuantityAvailable() != null) e.setQuantityAvailable(dto.getQuantityAvailable());
-        if (dto.getTotalQuantity() != null) e.setTotalQuantity(dto.getTotalQuantity());
-        if (dto.getLocation() != null) e.setLocation(dto.getLocation());
-        if (dto.getDescription() != null) e.setDescription(dto.getDescription());
+        e.setStatus(EquipmentStatus.OPERATIONAL); // Default
+        updateEntity(dto, e);
         return e;
     }
 
-    public static void mergeUpdate(LabEquipmentUpdateDTO dto, LabEquipment entity) {
-        if (dto == null || entity == null) return;
-        if (dto.getEquipmentName() != null) entity.setEquipmentName(dto.getEquipmentName());
-        if (dto.getCategory() != null) entity.setCategory(dto.getCategory());
-        if (dto.getPurchaseDate() != null) entity.setPurchaseDate(dto.getPurchaseDate());
-        if (dto.getQuantityAvailable() != null) entity.setQuantityAvailable(dto.getQuantityAvailable());
-        if (dto.getTotalQuantity() != null) entity.setTotalQuantity(dto.getTotalQuantity());
-        if (dto.getLocation() != null) entity.setLocation(dto.getLocation());
-        if (dto.getDescription() != null) entity.setDescription(dto.getDescription());
+    public static void updateEntity(LabEquipmentCreateDTO dto, LabEquipment e) {
+        if (dto == null || e == null)
+            return;
+        if (dto.getName() != null)
+            e.setName(dto.getName());
+        if (dto.getLabType() != null)
+            e.setLabType(dto.getLabType());
+        if (dto.getCategory() != null)
+            e.setCategory(dto.getCategory());
+        if (dto.getTotalQuantity() != null)
+            e.setTotalQuantity(dto.getTotalQuantity());
+        if (dto.getAvailableQuantity() != null)
+            e.setAvailableQuantity(dto.getAvailableQuantity());
+        if (dto.getStatus() != null)
+            e.setStatus(dto.getStatus());
+        if (dto.getConditionDetails() != null)
+            e.setConditionDetails(dto.getConditionDetails());
+        if (dto.getModelNumber() != null)
+            e.setModelNumber(dto.getModelNumber());
+        if (dto.getDescription() != null)
+            e.setDescription(dto.getDescription());
+        if (dto.getLastMaintenanceDate() != null)
+            e.setLastMaintenanceDate(dto.getLastMaintenanceDate());
+        if (dto.getNextMaintenanceDueDate() != null)
+            e.setNextMaintenanceDueDate(dto.getNextMaintenanceDueDate());
+        if (dto.getAisleNumber() != null)
+            e.setAisleNumber(dto.getAisleNumber());
+        if (dto.getShelfNumber() != null)
+            e.setShelfNumber(dto.getShelfNumber());
     }
 
     public static LabEquipmentResponseDTO toResponse(LabEquipment e) {
-        if (e == null) return null;
+        if (e == null)
+            return null;
         LabEquipmentResponseDTO r = new LabEquipmentResponseDTO();
-        r.setEquipmentName(e.getEquipmentName());
+        r.setId(e.getId());
+        r.setName(e.getName());
+        r.setLabType(e.getLabType());
         r.setCategory(e.getCategory());
-        r.setPurchaseDate(e.getPurchaseDate());
-        r.setQuantityAvailable(e.getQuantityAvailable());
         r.setTotalQuantity(e.getTotalQuantity());
-        r.setLocation(e.getLocation());
+        r.setAvailableQuantity(e.getAvailableQuantity());
+        r.setStatus(e.getStatus());
+        r.setConditionDetails(e.getConditionDetails());
+        r.setModelNumber(e.getModelNumber());
         r.setDescription(e.getDescription());
+        r.setLastMaintenanceDate(e.getLastMaintenanceDate());
+        r.setNextMaintenanceDueDate(e.getNextMaintenanceDueDate());
+        r.setAisleNumber(e.getAisleNumber());
+        r.setShelfNumber(e.getShelfNumber());
         return r;
     }
 }

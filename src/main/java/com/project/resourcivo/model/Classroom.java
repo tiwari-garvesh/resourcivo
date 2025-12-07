@@ -82,7 +82,7 @@ public class Classroom {
 
 	public Classroom() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Classroom(String name, Integer floor, Integer capacity, Boolean hasProjector, Boolean hasSmartboard,

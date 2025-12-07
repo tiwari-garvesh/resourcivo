@@ -34,8 +34,7 @@ public class AddressService implements IAddressService {
     @Transactional
     public AddressResponseDTO updateFromDto(Long id, AddressCreateDTO dto) {
         return repo.findById(id).map(existing -> {
-            Address updated = AddressMapper.toEntity(dto);
-            // merge or replace existing fields as needed
+            AddressMapper.updateEntity(dto, existing);
             var s = repo.save(existing);
             return AddressMapper.toResponse(s);
         }).orElse(null);
@@ -52,7 +51,13 @@ public class AddressService implements IAddressService {
     }
 
     @Override
+    public AddressResponseDTO getById(Long id) {
+        return repo.findById(id).map(AddressMapper::toResponse).orElse(null);
+    }
+
+    @Override
     public List<AddressResponseDTO> search(AddressFilterDTO filter) {
-        return repo.findAll(AddressSpecification.build(filter)).stream().map(AddressMapper::toResponse).collect(Collectors.toList());
+        return repo.findAll(AddressSpecification.build(filter)).stream().map(AddressMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

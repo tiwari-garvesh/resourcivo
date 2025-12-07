@@ -17,15 +17,21 @@ import com.project.resourcivo.specification.LibraryBookSpecification;
 public class LibraryBookService implements ILibraryBookService {
 
     private final LibraryBookRepository repo;
+    private final com.project.resourcivo.repository.LibraryRepository libraryRepo;
 
-    public LibraryBookService(LibraryBookRepository repo) {
+    public LibraryBookService(LibraryBookRepository repo,
+            com.project.resourcivo.repository.LibraryRepository libraryRepo) {
         this.repo = repo;
+        this.libraryRepo = libraryRepo;
     }
 
     @Override
     @Transactional
     public LibraryBookResponseDTO createFromDto(LibraryBookCreateDTO dto) {
         LibraryBook e = LibraryBookMapper.toEntity(dto);
+        if (dto.getLibraryId() != null) {
+            libraryRepo.findById(dto.getLibraryId()).ifPresent(e::setLibrary);
+        }
         var saved = repo.save(e);
         return LibraryBookMapper.toResponse(saved);
     }
@@ -34,8 +40,29 @@ public class LibraryBookService implements ILibraryBookService {
     @Transactional
     public LibraryBookResponseDTO updateFromDto(Long id, LibraryBookCreateDTO dto) {
         return repo.findById(id).map(existing -> {
-            LibraryBook updated = LibraryBookMapper.toEntity(dto);
-            // merge or replace existing fields as needed
+            // Update logic manually
+            if (dto.getName() != null)
+                existing.setName(dto.getName());
+            if (dto.getCategory() != null)
+                existing.setCategory(dto.getCategory());
+            if (dto.getYearBought() != null)
+                existing.setYearBought(dto.getYearBought());
+            if (dto.getAuthor() != null)
+                existing.setAuthor(dto.getAuthor());
+            if (dto.getPrice() != null)
+                existing.setPrice(dto.getPrice());
+            if (dto.getRating() != null)
+                existing.setRating(dto.getRating());
+            if (dto.getReviews() != null)
+                existing.setReviews(dto.getReviews());
+            if (dto.getAbout() != null)
+                existing.setAbout(dto.getAbout());
+            if (dto.getIsIssued() != null)
+                existing.setIsIssued(dto.getIsIssued());
+            if (dto.getLibraryId() != null) {
+                libraryRepo.findById(dto.getLibraryId()).ifPresent(existing::setLibrary);
+            }
+
             var s = repo.save(existing);
             return LibraryBookMapper.toResponse(s);
         }).orElse(null);
@@ -53,6 +80,20 @@ public class LibraryBookService implements ILibraryBookService {
 
     @Override
     public List<LibraryBookResponseDTO> search(LibraryBookFilterDTO filter) {
-        return repo.findAll(LibraryBookSpecification.build(filter)).stream().map(LibraryBookMapper::toResponse).collect(Collectors.toList());
+        return repo.findAll(LibraryBookSpecification.build(filter)).stream().map(LibraryBookMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+        }
+    }
+
+    @Override
+    public List<LibraryBookResponseDTO> getAll() {
+        return repo.findAll().stream().map(LibraryBookMapper::toResponse).collect(Collectors.toList());
     }
 }

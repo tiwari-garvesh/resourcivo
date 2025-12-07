@@ -9,38 +9,64 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="labEquipment")
+@Table(name = "lab_inventory")
 public class LabEquipment {
-	
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String equipmentName;
+	@jakarta.validation.constraints.NotBlank
+	private String name;
 
-    private String category; // e.g., Electronics, Mechanical, Computer, Physics
+	@jakarta.persistence.Enumerated(jakarta.persistence.EnumType.STRING)
+	private LabType labType;
 
-    private LocalDate purchaseDate;
+	private String category;
 
-	private int quantityAvailable;
+	// Inventory
+	private int totalQuantity;
+	private int availableQuantity;
 
-    private int totalQuantity;
+	@jakarta.persistence.Enumerated(jakarta.persistence.EnumType.STRING)
+	private EquipmentStatus status;
 
-    private String location; // Lab room number
+	private String conditionDetails; // "New", "Good", etc.
 
-    private String description; // Optional notes
+	// Details
+	private String modelNumber;
+	private String description;
 
+	// Maintenance
+	private LocalDate lastMaintenanceDate;
+	private LocalDate nextMaintenanceDueDate;
 
-    public Long getId() {
+	// Location
+	private String aisleNumber;
+	private String shelfNumber;
+
+	public Long getId() {
 		return id;
 	}
 
-	public String getEquipmentName() {
-		return equipmentName;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public void setEquipmentName(String equipmentName) {
-		this.equipmentName = equipmentName;
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public LabType getLabType() {
+		return labType;
+	}
+
+	public void setLabType(LabType labType) {
+		this.labType = labType;
 	}
 
 	public String getCategory() {
@@ -51,22 +77,6 @@ public class LabEquipment {
 		this.category = category;
 	}
 
-	public LocalDate getPurchaseDate() {
-		return purchaseDate;
-	}
-
-	public void setPurchaseDate(LocalDate purchaseDate) {
-		this.purchaseDate = purchaseDate;
-	}
-
-	public int getQuantityAvailable() {
-		return quantityAvailable;
-	}
-
-	public void setQuantityAvailable(int quantityAvailable) {
-		this.quantityAvailable = quantityAvailable;
-	}
-
 	public int getTotalQuantity() {
 		return totalQuantity;
 	}
@@ -75,12 +85,36 @@ public class LabEquipment {
 		this.totalQuantity = totalQuantity;
 	}
 
-	public String getLocation() {
-		return location;
+	public int getAvailableQuantity() {
+		return availableQuantity;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setAvailableQuantity(int availableQuantity) {
+		this.availableQuantity = availableQuantity;
+	}
+
+	public EquipmentStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(EquipmentStatus status) {
+		this.status = status;
+	}
+
+	public String getConditionDetails() {
+		return conditionDetails;
+	}
+
+	public void setConditionDetails(String conditionDetails) {
+		this.conditionDetails = conditionDetails;
+	}
+
+	public String getModelNumber() {
+		return modelNumber;
+	}
+
+	public void setModelNumber(String modelNumber) {
+		this.modelNumber = modelNumber;
 	}
 
 	public String getDescription() {
@@ -91,30 +125,35 @@ public class LabEquipment {
 		this.description = description;
 	}
 
-	public LabEquipment() {
-		super();
-		// TODO Auto-generated constructor stub
+	public LocalDate getLastMaintenanceDate() {
+		return lastMaintenanceDate;
 	}
 
-	public LabEquipment(String equipmentName, String category, LocalDate purchaseDate, int quantityAvailable,
-			int totalQuantity, String location, String description) {
-		super();
-		this.equipmentName = equipmentName;
-		this.category = category;
-		this.purchaseDate = purchaseDate;
-		this.quantityAvailable = quantityAvailable;
-		this.totalQuantity = totalQuantity;
-		this.location = location;
-		this.description = description;
+	public void setLastMaintenanceDate(LocalDate lastMaintenanceDate) {
+		this.lastMaintenanceDate = lastMaintenanceDate;
 	}
 
-	@Override
-	public String toString() {
-		return "LabEquipment [id=" + id + ", equipmentName=" + equipmentName + ", category=" + category
-				+ ", purchaseDate=" + purchaseDate + ", quantityAvailable=" + quantityAvailable + ", totalQuantity="
-				+ totalQuantity + ", location=" + location + ", description=" + description + "]";
+	public LocalDate getNextMaintenanceDueDate() {
+		return nextMaintenanceDueDate;
 	}
-	
-	
 
+	public void setNextMaintenanceDueDate(LocalDate nextMaintenanceDueDate) {
+		this.nextMaintenanceDueDate = nextMaintenanceDueDate;
+	}
+
+	public String getAisleNumber() {
+		return aisleNumber;
+	}
+
+	public void setAisleNumber(String aisleNumber) {
+		this.aisleNumber = aisleNumber;
+	}
+
+	public String getShelfNumber() {
+		return shelfNumber;
+	}
+
+	public void setShelfNumber(String shelfNumber) {
+		this.shelfNumber = shelfNumber;
+	}
 }

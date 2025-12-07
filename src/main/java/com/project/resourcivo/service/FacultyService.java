@@ -140,7 +140,8 @@ public class FacultyService implements IFacultyService {
             return null;
         if (sref.getId() != null) {
             return subjectRepository.findById(sref.getId())
-                    .orElseThrow(() -> new RuntimeException("Subject not found: " + sref.getId()));
+                    .orElseThrow(() -> new com.project.resourcivo.exception.ResourceNotFoundException("Subject", "id",
+                            sref.getId()));
         }
         // fallback: try find by name (not implemented - returning new Subject stub)
         com.project.resourcivo.model.Subject s = new com.project.resourcivo.model.Subject();

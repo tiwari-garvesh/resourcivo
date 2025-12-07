@@ -8,7 +8,12 @@ import com.project.resourcivo.criteria.ContactFilterDTO;
 
 public interface IContactService {
     ContactResponseDTO createFromDto(ContactCreateDTO dto);
+
     ContactResponseDTO updateFromDto(Long id, ContactCreateDTO dto);
+
     ContactResponseDTO partialUpdateFromDto(Long id, ContactUpdateDTO dto);
+
+    ContactResponseDTO getById(Long id);
+
     java.util.List<ContactResponseDTO> search(ContactFilterDTO filter);
 }

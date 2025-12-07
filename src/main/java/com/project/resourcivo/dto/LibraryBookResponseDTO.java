@@ -13,6 +13,8 @@ public class LibraryBookResponseDTO {
     private String reviews;
     private String about;
     private Boolean isIssued;
+    private Long libraryId;
+    private String libraryName;
 
     public Long getId() {
         return id;
@@ -92,5 +94,21 @@ public class LibraryBookResponseDTO {
 
     public void setIsIssued(Boolean isIssued) {
         this.isIssued = isIssued;
+    }
+
+    public Long getLibraryId() {
+        return libraryId;
+    }
+
+    public void setLibraryId(Long libraryId) {
+        this.libraryId = libraryId;
+    }
+
+    public String getLibraryName() {
+        return libraryName;
+    }
+
+    public void setLibraryName(String libraryName) {
+        this.libraryName = libraryName;
     }
 }

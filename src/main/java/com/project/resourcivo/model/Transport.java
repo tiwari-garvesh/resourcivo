@@ -20,7 +20,7 @@ public class Transport {
 	private String vehicleName; // e.g., College Bus, Van, Car
 
 	private String vehicleNumber; // e.g., UP16 AB 1234)
-	
+
 	private String vehicleType; // Bus, Van, Car, Jeep, Auto etc.
 
 	private String manufacturer;
@@ -114,7 +114,7 @@ public class Transport {
 
 	public Transport() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Transport(String vehicleName, String vehicleNumber, String vehicleType, String manufacturer,
@@ -138,7 +138,5 @@ public class Transport {
 				+ ", seatingCapacity=" + seatingCapacity + ", driverName=" + driverName + ", driverContact="
 				+ driverContact + ", description=" + description + "]";
 	}
-	
-	
 
 }

@@ -1,58 +1,68 @@
 package com.project.resourcivo.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.stream.Collectors;
-import java.util.List;
-import com.project.resourcivo.repository.InventoryItemRepository;
+import com.project.resourcivo.dto.InventoryItemCreateDTO;
+import com.project.resourcivo.dto.InventoryItemResponseDTO;
+import com.project.resourcivo.exception.ResourceNotFoundException;
 import com.project.resourcivo.mapper.InventoryItemMapper;
 import com.project.resourcivo.model.InventoryItem;
-import com.project.resourcivo.dto.InventoryItemCreateDTO;
-import com.project.resourcivo.dto.InventoryItemUpdateDTO;
-import com.project.resourcivo.dto.InventoryItemResponseDTO;
-import com.project.resourcivo.criteria.InventoryItemFilterDTO;
-import com.project.resourcivo.specification.InventoryItemSpecification;
+import com.project.resourcivo.repository.InventoryItemRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class InventoryItemService implements IInventoryItemService {
+@Transactional
+public class InventoryItemService {
 
-    private final InventoryItemRepository repo;
+    private final InventoryItemRepository repository;
 
-    public InventoryItemService(InventoryItemRepository repo) {
-        this.repo = repo;
+    public InventoryItemService(InventoryItemRepository repository) {
+        this.repository = repository;
     }
 
-    @Override
-    @Transactional
-    public InventoryItemResponseDTO createFromDto(InventoryItemCreateDTO dto) {
-        InventoryItem e = InventoryItemMapper.toEntity(dto);
-        var saved = repo.save(e);
-        return InventoryItemMapper.toResponse(saved);
+    public InventoryItemResponseDTO create(InventoryItemCreateDTO dto) {
+        InventoryItem entity = InventoryItemMapper.toEntity(dto);
+        return InventoryItemMapper.toResponse(repository.save(entity));
     }
 
-    @Override
-    @Transactional
-    public InventoryItemResponseDTO updateFromDto(Long id, InventoryItemCreateDTO dto) {
-        return repo.findById(id).map(existing -> {
-            InventoryItem updated = InventoryItemMapper.toEntity(dto);
-            // merge or replace existing fields as needed
-            var s = repo.save(existing);
-            return InventoryItemMapper.toResponse(s);
-        }).orElse(null);
+    public InventoryItemResponseDTO getById(Long id) {
+        InventoryItem entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory Item", "id", id));
+        return InventoryItemMapper.toResponse(entity);
     }
 
-    @Override
-    @Transactional
-    public InventoryItemResponseDTO partialUpdateFromDto(Long id, InventoryItemUpdateDTO dto) {
-        return repo.findById(id).map(existing -> {
-            InventoryItemMapper.mergeUpdate(dto, existing);
-            var s = repo.save(existing);
-            return InventoryItemMapper.toResponse(s);
-        }).orElse(null);
+    public List<InventoryItemResponseDTO> getAll() {
+        return repository.findAll().stream()
+                .map(InventoryItemMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public List<InventoryItemResponseDTO> search(InventoryItemFilterDTO filter) {
-        return repo.findAll(InventoryItemSpecification.build(filter)).stream().map(InventoryItemMapper::toResponse).collect(Collectors.toList());
+    public InventoryItemResponseDTO update(Long id, InventoryItemCreateDTO dto) {
+        InventoryItem entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory Item", "id", id));
+
+        InventoryItemMapper.updateEntity(dto, entity);
+        return InventoryItemMapper.toResponse(repository.save(entity));
+    }
+
+    public InventoryItemResponseDTO partialUpdate(Long id, InventoryItemCreateDTO dto) {
+        InventoryItem entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory Item", "id", id));
+
+        InventoryItemMapper.updateEntity(dto, entity);
+        return InventoryItemMapper.toResponse(repository.save(entity));
+    }
+
+    public List<InventoryItemResponseDTO> search(com.project.resourcivo.criteria.InventoryItemFilterDTO filter) {
+        return repository.findAll(com.project.resourcivo.specification.InventoryItemSpecification.build(filter))
+                .stream()
+                .map(InventoryItemMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }

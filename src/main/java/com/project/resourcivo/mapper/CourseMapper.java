@@ -14,31 +14,29 @@ public final class CourseMapper {
         if (dto == null)
             return null;
         Course e = new Course();
-        if (dto.getName() != null)
-            e.setName(dto.getName());
-        if (dto.getCode() != null)
-            e.setCode(dto.getCode());
-        if (dto.getSubjects() != null)
-            e.setSubjects(dto.getSubjects());
-        if (dto.getSubjects() != null)
-            e.setSubjects(dto.getSubjects());
-        // resolve relation for headOfDepartment by id or nested DTO
-        if (dto.getHeadOfDepartment() != null) {
-            // expecting nested DTO with id field or id property; try id resolution in
-            // service
-            // placeholder: set stub or fetch managed entity in service
-        }
-        // resolve relation for headOfDepartment by id or nested DTO
-        if (dto.getHeadOfDepartment() != null) {
-            // expecting nested DTO with id field or id property; try id resolution in
-            // service
-            // placeholder: set stub or fetch managed entity in service
-        }
-        if (dto.getStudentsEnrolled() != null)
-            e.setStudentsEnrolled(dto.getStudentsEnrolled());
-        if (dto.getStudentsEnrolled() != null)
-            e.setStudentsEnrolled(dto.getStudentsEnrolled());
+        updateEntity(dto, e);
         return e;
+    }
+
+    public static void updateEntity(CourseCreateDTO dto, Course entity) {
+        if (dto == null || entity == null)
+            return;
+        if (dto.getName() != null)
+            entity.setName(dto.getName());
+        if (dto.getCode() != null)
+            entity.setCode(dto.getCode());
+        if (dto.getSubjects() != null)
+            entity.setSubjects(dto.getSubjects());
+
+        // resolve relation for headOfDepartment by id or nested DTO
+        if (dto.getHeadOfDepartment() != null) {
+            // expecting nested DTO with id field or id property; try id resolution in
+            // service
+            // placeholder: set stub or fetch managed entity in service
+        }
+
+        if (dto.getStudentsEnrolled() != null)
+            entity.setStudentsEnrolled(dto.getStudentsEnrolled());
     }
 
     public static void mergeUpdate(CourseUpdateDTO dto, Course entity) {

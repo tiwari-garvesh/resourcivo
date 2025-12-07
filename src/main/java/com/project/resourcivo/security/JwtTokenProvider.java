@@ -10,9 +10,13 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class JwtTokenProvider {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     @Value("${jwt.secret:your-very-secure-secret-key-that-is-at-least-256-bits-long-for-hs256-algorithm}")
     private String jwtSecret;
@@ -72,15 +76,15 @@ public class JwtTokenProvider {
                     .parseSignedClaims(token);
             return true;
         } catch (SecurityException ex) {
-            System.err.println("Invalid JWT signature");
+            logger.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
-            System.err.println("Invalid JWT token");
+            logger.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
-            System.err.println("Expired JWT token");
+            logger.error("Expired JWT token");
         } catch (UnsupportedJwtException ex) {
-            System.err.println("Unsupported JWT token");
+            logger.error("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
-            System.err.println("JWT claims string is empty");
+            logger.error("JWT claims string is empty");
         }
         return false;
     }

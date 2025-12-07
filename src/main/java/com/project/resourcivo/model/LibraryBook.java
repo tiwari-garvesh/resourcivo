@@ -10,31 +10,43 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="libraryBook")
+@Table(name = "libraryBook")
 public class LibraryBook {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "book_id")
 	private Long id;
-	
+
 	private String name;
-	
+
 	private String category;
-	
+
 	private LocalDate yearBought;
-	
+
 	private String author;
-	
+
 	private Float price;
-	
+
 	private Float rating;
-	
+
 	private String reviews;
-	
+
 	private String about;
-	
+
 	private Boolean isIssued;
+
+	@jakarta.persistence.ManyToOne
+	@jakarta.persistence.JoinColumn(name = "library_id")
+	private Library library;
+
+	public Library getLibrary() {
+		return library;
+	}
+
+	public void setLibrary(Library library) {
+		this.library = library;
+	}
 
 	public Long getId() {
 		return id;
@@ -114,7 +126,7 @@ public class LibraryBook {
 
 	public LibraryBook() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public LibraryBook(String name, String category, String author, Float price) {

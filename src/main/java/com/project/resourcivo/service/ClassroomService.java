@@ -34,8 +34,7 @@ public class ClassroomService implements IClassroomService {
     @Transactional
     public ClassroomResponseDTO updateFromDto(Long id, ClassroomCreateDTO dto) {
         return repo.findById(id).map(existing -> {
-            Classroom updated = ClassroomMapper.toEntity(dto);
-            // merge or replace existing fields as needed
+            ClassroomMapper.updateEntity(dto, existing);
             var s = repo.save(existing);
             return ClassroomMapper.toResponse(s);
         }).orElse(null);
@@ -52,7 +51,26 @@ public class ClassroomService implements IClassroomService {
     }
 
     @Override
+    public ClassroomResponseDTO getById(Long id) {
+        return repo.findById(id).map(ClassroomMapper::toResponse).orElse(null);
+    }
+
+    @Override
     public List<ClassroomResponseDTO> search(ClassroomFilterDTO filter) {
-        return repo.findAll(ClassroomSpecification.build(filter)).stream().map(ClassroomMapper::toResponse).collect(Collectors.toList());
+        return repo.findAll(ClassroomSpecification.build(filter)).stream().map(ClassroomMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ClassroomResponseDTO> getAll() {
+        return repo.findAll().stream().map(ClassroomMapper::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+        }
     }
 }

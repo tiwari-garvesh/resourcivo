@@ -74,4 +74,35 @@ public class SubjectController {
     public ResponseEntity<List<SubjectResponseDTO>> search(@RequestBody SubjectFilterDTO filter) {
         return ResponseEntity.ok(service.search(filter));
     }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get subject by ID", description = "Retrieves a subject by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Subject found"),
+            @ApiResponse(responseCode = "404", description = "Subject not found")
+    })
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        var res = service.getById(id);
+        if (res == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject not found");
+        return ResponseEntity.ok(res);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete subject", description = "Deletes a subject by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Subject deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Subject not found")
+    })
+    public ResponseEntity<?> delete(@Parameter(description = "Subject ID") @PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    @Operation(summary = "Get all subjects", description = "Retrieves a list of all subjects")
+    @ApiResponse(responseCode = "200", description = "List of subjects retrieved successfully")
+    public ResponseEntity<List<SubjectResponseDTO>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
 }

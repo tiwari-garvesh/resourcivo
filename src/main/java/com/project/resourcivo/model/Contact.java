@@ -62,7 +62,7 @@ public class Contact {
 
 	public Contact() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Contact(Long primaryNumber, Long alternateNumber, String primaryEmail, String alternateEmail) {

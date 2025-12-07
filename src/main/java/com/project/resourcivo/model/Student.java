@@ -31,14 +31,17 @@ public class Student {
 
 	private LocalDate dateOfBirth;
 
-	@OneToOne
+	@OneToOne(cascade = jakarta.persistence.CascadeType.ALL)
 	private Address currentAddress;
 
-	@OneToOne
+	@OneToOne(cascade = jakarta.persistence.CascadeType.ALL)
 	private Address permanentAddress;
 
-	@OneToOne
+	@OneToOne(cascade = jakarta.persistence.CascadeType.ALL)
 	private Contact contact;
+
+	@jakarta.persistence.OneToMany(cascade = jakarta.persistence.CascadeType.ALL)
+	private java.util.List<EmergencyContact> emergencyContacts;
 
 	private LocalDate dateOfJoining;
 
@@ -47,6 +50,14 @@ public class Student {
 	private String course;
 
 	private String bio;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -104,6 +115,14 @@ public class Student {
 		this.contact = contact;
 	}
 
+	public java.util.List<EmergencyContact> getEmergencyContacts() {
+		return emergencyContacts;
+	}
+
+	public void setEmergencyContacts(java.util.List<EmergencyContact> emergencyContacts) {
+		this.emergencyContacts = emergencyContacts;
+	}
+
 	public LocalDate getDateOfJoining() {
 		return dateOfJoining;
 	}
@@ -138,7 +157,6 @@ public class Student {
 
 	public Student() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Student(String firstName, String lastName, LocalDate dateOfBirth, Address currentAddress,

@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
 
     @Autowired
     private RoleRepository roleRepository;
@@ -36,9 +40,9 @@ public class DataInitializer implements CommandLineRunner {
             roleRepository.save(facultyRole);
             roleRepository.save(studentRole);
 
-            System.out.println("✅ Default roles created: ADMIN, FACULTY, STUDENT");
+            logger.info("✅ Default roles created: ADMIN, FACULTY, STUDENT");
         } else {
-            System.out.println("✅ Roles already exist in database");
+            logger.info("✅ Roles already exist in database");
         }
 
         // Initialize default user if it doesn't exist
@@ -59,9 +63,9 @@ public class DataInitializer implements CommandLineRunner {
             user.setRoles(roles);
 
             userRepository.save(user);
-            System.out.println("✅ Default user created: username/password");
+            logger.info("✅ Default user created: username/password");
         } else {
-            System.out.println("✅ Default user already exists");
+            logger.info("✅ Default user already exists");
         }
     }
 }

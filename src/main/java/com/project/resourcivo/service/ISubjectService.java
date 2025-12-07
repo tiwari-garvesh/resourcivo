@@ -8,7 +8,16 @@ import com.project.resourcivo.criteria.SubjectFilterDTO;
 
 public interface ISubjectService {
     SubjectResponseDTO createFromDto(SubjectCreateDTO dto);
+
     SubjectResponseDTO updateFromDto(Long id, SubjectCreateDTO dto);
+
     SubjectResponseDTO partialUpdateFromDto(Long id, SubjectUpdateDTO dto);
+
+    SubjectResponseDTO getById(Long id);
+
     java.util.List<SubjectResponseDTO> search(SubjectFilterDTO filter);
+
+    void delete(Long id);
+
+    List<SubjectResponseDTO> getAll();
 }
